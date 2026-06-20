@@ -325,6 +325,73 @@
     vertical-align:middle;
   }
   @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- MODE SELECT ---------- */
+  .mode-select{padding:8px 0 4px;}
+  .mode-select h2{
+    font-family:'Noto Serif Thai',serif;
+    text-align:center;color:var(--navy);
+    font-size:19px;margin:0 0 22px;
+  }
+  .mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:560px){.mode-cards{grid-template-columns:1fr;}}
+  .mode-card{
+    border:1.5px solid var(--line);
+    border-radius:14px;
+    padding:24px 18px;
+    text-align:center;
+    cursor:pointer;
+    background:#fff;
+    transition:border-color .15s, transform .12s, box-shadow .15s;
+  }
+  .mode-card:hover{
+    border-color:var(--gold);
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(201,160,74,0.18);
+  }
+  .mode-card .mc-icon{font-size:34px;margin-bottom:10px;}
+  .mode-card h3{
+    font-family:'Noto Serif Thai',serif;
+    font-size:16px;color:var(--navy);margin:0 0 6px;
+  }
+  .mode-card p{font-size:12.5px;color:var(--muted);margin:0;line-height:1.6;}
+
+  /* ---------- LOOKUP / INSTALLMENT UPDATE ---------- */
+  .lookup-box{text-align:center;}
+  .lookup-box .li-icon{font-size:30px;margin-bottom:8px;}
+  .lookup-box h2{
+    font-family:'Noto Serif Thai',serif;color:var(--navy);
+    font-size:18px;margin:0 0 6px;
+  }
+  .lookup-box p{color:var(--muted);font-size:13px;margin:0 0 20px;}
+  .lookup-box .field{text-align:left;max-width:320px;margin:0 auto 18px;}
+
+  .found-box{
+    border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin-bottom:20px;background:#fbfaf6;text-align:left;
+  }
+  .found-box .fb-name{font-weight:700;color:var(--navy);font-size:14.5px;margin-bottom:2px;}
+  .found-box .fb-sub{font-size:12px;color:var(--muted);}
+
+  .inst-pick{display:flex;gap:10px;margin-bottom:20px;}
+  .inst-pick-card{
+    flex:1;border:1.5px solid var(--line);border-radius:10px;
+    padding:14px 10px;text-align:center;cursor:pointer;
+    transition:all .15s;
+  }
+  .inst-pick-card.active{border-color:var(--navy);background:var(--navy);color:#fff;}
+  .inst-pick-card .ip-num{font-weight:700;font-size:14px;}
+  .inst-pick-card .ip-status{font-size:11px;margin-top:4px;color:var(--muted);}
+  .inst-pick-card.active .ip-status{color:rgba(255,255,255,0.75);}
+  .inst-pick-card .ip-status.done{color:var(--green);font-weight:600;}
+  .inst-pick-card.active .ip-status.done{color:var(--gold-light);}
+
+  .back-link{
+    display:inline-flex;align-items:center;gap:4px;
+    color:var(--muted);font-size:13px;text-decoration:none;
+    margin-bottom:14px;cursor:pointer;
+  }
+  .back-link:hover{color:var(--navy);}
 </style>
 </head>
 <body>
@@ -376,6 +443,79 @@
     </div>
   </div>
 
+  <!-- MODE SELECT -->
+  <div class="card mode-select" id="modeSelect">
+    <h2>ต้องการทำรายการไหนครับ/คะ</h2>
+    <div class="mode-cards">
+      <div class="mode-card" id="btnModeBook">
+        <div class="mc-icon">📝</div>
+        <h3>จองทริปใหม่</h3>
+        <p>กรอกข้อมูลผู้เดินทาง ห้องพัก และเอกสารสำหรับการจองครั้งแรก</p>
+      </div>
+      <div class="mode-card" id="btnModeSlip">
+        <div class="mc-icon">🧾</div>
+        <h3>อัปโหลดสลิปงวดถัดไป</h3>
+        <p>จองไว้แล้ว ต้องการแนบสลิปโอนเงินงวดที่ 2 หรือ 3 เพิ่มเติม</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOOKUP SCREEN (อัปสลิปงวดถัดไป) -->
+  <div class="card lookup-box" id="lookupScreen" style="display:none">
+    <div class="back-link" id="backFromLookup">← กลับหน้าแรก</div>
+    <div class="li-icon">🔍</div>
+    <h2>ค้นหาการจองของคุณ</h2>
+    <p>กรอกเบอร์โทรศัพท์ที่ใช้ตอนจองทริป เพื่อค้นหาข้อมูล</p>
+
+    <div class="field" data-name="lookupPhone">
+      <label>เบอร์โทรศัพท์<span class="req">*</span></label>
+      <input type="tel" id="lookupPhone" placeholder="08xxxxxxxx">
+      <div class="error-text" id="lookupError">ไม่พบข้อมูลการจองด้วยเบอร์นี้ กรุณาตรวจสอบอีกครั้ง หรือติดต่อแอดมิน</div>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="btnLookup" style="width:100%">ค้นหา</button>
+  </div>
+
+  <!-- INSTALLMENT UPDATE SCREEN -->
+  <div class="card" id="installmentScreen" style="display:none">
+    <div class="back-link" id="backFromInstallment">← ค้นหาใหม่</div>
+
+    <div class="found-box" id="foundBox"></div>
+
+    <h2 style="font-family:'Noto Serif Thai',serif;color:var(--navy);font-size:16px;margin:0 0 14px;">เลือกงวดที่ต้องการอัปโหลดสลิป</h2>
+    <div class="inst-pick" id="instPick">
+      <div class="inst-pick-card" data-n="1"><div class="ip-num">งวดที่ 1</div><div class="ip-status" id="ipStatus1">ยังไม่อัป</div></div>
+      <div class="inst-pick-card" data-n="2"><div class="ip-num">งวดที่ 2</div><div class="ip-status" id="ipStatus2">ยังไม่อัป</div></div>
+      <div class="inst-pick-card" data-n="3"><div class="ip-num">งวดที่ 3</div><div class="ip-status" id="ipStatus3">ยังไม่อัป</div></div>
+    </div>
+
+    <div class="row2">
+      <div class="field"><label>วันที่โอน</label><input type="date" id="instDate"></div>
+      <div class="field"><label>จำนวนเงิน</label><input type="text" id="instAmount" placeholder="5,000"></div>
+    </div>
+
+    <div class="field">
+      <label>อัปโหลดสลิป<span class="req">*</span></label>
+      <div class="file-drop" onclick="document.getElementById('instSlip').click()">
+        <input type="file" id="instSlip" accept="image/*,.pdf">
+        <div class="fd-icon">🧾</div>
+        <div class="fd-text">แตะเพื่อแนบสลิป</div>
+        <div class="fd-name" id="instSlipName"></div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-gold" id="btnSubmitInstallment" style="width:100%;margin-top:8px">บันทึกสลิป</button>
+  </div>
+
+  <!-- INSTALLMENT SUCCESS -->
+  <div class="card success-screen" id="installmentSuccess">
+    <div class="success-icon">✓</div>
+    <h2>บันทึกสลิปเรียบร้อยแล้ว</h2>
+    <p>ขอบคุณครับ/ค่ะ ทีมงานจะตรวจสอบยอดโอนและอัปเดตสถานะให้เร็ว ๆ นี้<br>
+    หากมีข้อสงสัยติดต่อ LINE/โทร 084-749-2191</p>
+  </div>
+
+  <div id="bookingFlow" style="display:none">
   <!-- PROGRESS -->
   <div class="progress-wrap">
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -651,6 +791,7 @@
       หากมีข้อสงสัยติดต่อ LINE/โทร 084-749-2191</p>
     </div>
   </div>
+  </div>
 
   <div class="footer-note">
     Abey Travel &amp; Halal Trip · ใบอนุญาตประกอบธุรกิจนำเที่ยวเลขที่ 41/00720
@@ -661,6 +802,185 @@
   // ===== ตั้งค่า: ใส่ URL ของ Apps Script Web App ที่ deploy แล้ว =====
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyea9GY3QBTGAkm1O5q-dsVtTxKCJ-txJawR8k95XYEsswupDKxdyjWEGnCLuiAWv-f/exec";
 
+  // ==================== MODE SWITCHING ====================
+  const screens = {
+    modeSelect: document.getElementById('modeSelect'),
+    lookup: document.getElementById('lookupScreen'),
+    installment: document.getElementById('installmentScreen'),
+    installmentSuccess: document.getElementById('installmentSuccess'),
+    bookingFlow: document.getElementById('bookingFlow')
+  };
+
+  function showScreen(name){
+    Object.keys(screens).forEach(k => {
+      if(screens[k]) screens[k].style.display = 'none';
+    });
+    if(screens[name]) screens[name].style.display = (name === 'installmentSuccess') ? 'block' : '';
+    if(name === 'installmentSuccess') screens[name].classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.getElementById('btnModeBook').addEventListener('click', () => {
+    showScreen('bookingFlow');
+  });
+  document.getElementById('btnModeSlip').addEventListener('click', () => {
+    showScreen('lookup');
+  });
+  document.getElementById('backFromLookup').addEventListener('click', () => {
+    showScreen('modeSelect');
+  });
+  document.getElementById('backFromInstallment').addEventListener('click', () => {
+    showScreen('lookup');
+  });
+
+  // เรียก Apps Script ผ่าน fetch (ใช้ form-urlencoded เพื่อเลี่ยง CORS preflight)
+  async function callScript(action, payload){
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: action, payload: JSON.stringify(payload) })
+    });
+    return res.json();
+  }
+
+  // ==================== LOOKUP (ค้นหาด้วยเบอร์โทร) ====================
+  let foundBooking = null; // { rowNumber, thaiName, engName, installments, phone }
+
+  document.getElementById('btnLookup').addEventListener('click', async () => {
+    const phoneInput = document.getElementById('lookupPhone');
+    const phone = phoneInput.value.trim();
+    const fieldWrap = phoneInput.closest('.field');
+    const errEl = document.getElementById('lookupError');
+
+    if(!phone){
+      fieldWrap.classList.add('invalid');
+      errEl.textContent = 'กรุณากรอกเบอร์โทรศัพท์';
+      return;
+    }
+    fieldWrap.classList.remove('invalid');
+
+    if(SCRIPT_URL === "PASTE_YOUR_WEB_APP_URL_HERE"){
+      alert('ยังไม่ได้ตั้งค่า SCRIPT_URL — ดูคู่มือ_setup.md เพื่อใส่ URL ของ Apps Script Web App');
+      return;
+    }
+
+    const btn = document.getElementById('btnLookup');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>กำลังค้นหา...';
+
+    try{
+      const res = await callScript('lookupByPhone', { phone: phone });
+      btn.disabled = false;
+      btn.innerHTML = 'ค้นหา';
+      if(res && res.result === 'found'){
+        foundBooking = res;
+        foundBooking.phone = phone;
+        renderInstallmentScreen();
+        showScreen('installment');
+      } else {
+        fieldWrap.classList.add('invalid');
+        errEl.textContent = 'ไม่พบข้อมูลการจองด้วยเบอร์นี้ กรุณาตรวจสอบอีกครั้ง หรือติดต่อแอดมิน';
+      }
+    }catch(err){
+      btn.disabled = false;
+      btn.innerHTML = 'ค้นหา';
+      fieldWrap.classList.add('invalid');
+      errEl.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+    }
+  });
+
+  let selectedInstallment = null;
+
+  function renderInstallmentScreen(){
+    document.getElementById('foundBox').innerHTML =
+      '<div class="fb-name">' + escapeHtml_(foundBooking.thaiName || '') + '</div>' +
+      '<div class="fb-sub">' + escapeHtml_(foundBooking.engName || '') + ' · ' + escapeHtml_(foundBooking.phone) + '</div>';
+
+    [1,2,3].forEach(n => {
+      const info = foundBooking.installments[n];
+      const statusEl = document.getElementById('ipStatus' + n);
+      const hasSlip = info && info.slip;
+      statusEl.textContent = hasSlip ? '✓ อัปแล้ว' : 'ยังไม่อัป';
+      statusEl.classList.toggle('done', !!hasSlip);
+    });
+
+    document.querySelectorAll('.inst-pick-card').forEach(card => {
+      card.classList.remove('active');
+      card.onclick = () => {
+        document.querySelectorAll('.inst-pick-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        selectedInstallment = Number(card.dataset.n);
+        const info = foundBooking.installments[selectedInstallment];
+        document.getElementById('instDate').value = info && info.date ? formatDateForInput_(info.date) : '';
+        document.getElementById('instAmount').value = info && info.amount ? info.amount : '';
+      };
+    });
+    // default เลือกงวดแรกที่ยังไม่อัป
+    const firstPending = [1,2,3].find(n => !(foundBooking.installments[n] && foundBooking.installments[n].slip)) || 1;
+    document.querySelector(`.inst-pick-card[data-n="${firstPending}"]`).click();
+  }
+
+  function formatDateForInput_(val){
+    try{
+      const d = new Date(val);
+      if(isNaN(d)) return '';
+      return d.toISOString().split('T')[0];
+    }catch(e){ return ''; }
+  }
+
+  function escapeHtml_(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById('instSlip').addEventListener('change', function(){
+    const lbl = document.getElementById('instSlipName');
+    lbl.textContent = this.files.length ? '✓ ' + this.files[0].name : '';
+  });
+
+  document.getElementById('btnSubmitInstallment').addEventListener('click', async () => {
+    if(!selectedInstallment){
+      alert('กรุณาเลือกงวดที่ต้องการอัปโหลด');
+      return;
+    }
+    const slipFileInput = document.getElementById('instSlip');
+    if(slipFileInput.files.length === 0){
+      alert('กรุณาแนบไฟล์สลิป');
+      return;
+    }
+
+    const btn = document.getElementById('btnSubmitInstallment');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>กำลังบันทึก...';
+
+    const slipFile = await fileToBase64(slipFileInput.files[0]);
+
+    const payload = {
+      rowNumber: foundBooking.rowNumber,
+      phone: foundBooking.phone,
+      installmentNo: selectedInstallment,
+      date: document.getElementById('instDate').value,
+      amount: document.getElementById('instAmount').value,
+      slipFile: slipFile
+    };
+
+    try{
+      const res = await callScript('updateInstallment', payload);
+      if(res && res.result === 'success'){
+        showScreen('installmentSuccess');
+      } else {
+        alert('เกิดข้อผิดพลาด: ' + (res && res.message ? res.message : 'unknown error'));
+        btn.disabled = false;
+        btn.innerHTML = 'บันทึกสลิป';
+      }
+    }catch(err){
+      alert('เกิดข้อผิดพลาด: ' + err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'บันทึกสลิป';
+    }
+  });
+
+  // ==================== BOOKING FORM (จองใหม่) ====================
   const form = document.getElementById('bookingForm');
   const steps = Array.from(document.querySelectorAll('.step'));
   const totalSteps = steps.length;
@@ -690,7 +1010,7 @@
     progressFill.style.width = (n / totalSteps * 100) + '%';
     stepNow.textContent = n;
     stepTitle.textContent = stepTitles[n];
-    window.scrollTo({top: document.querySelector('.card').offsetTop - 16, behavior:'smooth'});
+    window.scrollTo({top: document.querySelector('#bookingFlow .card').offsetTop - 16, behavior:'smooth'});
   }
 
   function validateStep(n){
@@ -826,27 +1146,27 @@
     };
 
     try{
-      const res = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: new URLSearchParams({ payload: JSON.stringify(payload) })
-      });
-      const data = await res.json();
-      if(data.result === 'success'){
-        document.querySelector('.card form').style.display = 'none';
-        document.querySelectorAll('.card .step, .card .nav-btns').forEach(el => el.style.display='none');
+      const data = await callScript('submitBooking', payload);
+      if(data && data.result === 'success'){
+        document.querySelector('#bookingFlow form').style.display = 'none';
+        document.querySelectorAll('#bookingFlow .step, #bookingFlow .nav-btns').forEach(el => el.style.display='none');
         document.getElementById('successScreen').classList.add('active');
-        document.querySelector('.progress-wrap').style.display = 'none';
+        document.querySelector('#bookingFlow .progress-wrap').style.display = 'none';
       } else {
-        throw new Error(data.message || 'unknown error');
+        alert('เกิดข้อผิดพลาดในการส่งฟอร์ม: ' + (data && data.message ? data.message : 'unknown error') + '\nกรุณาลองใหม่อีกครั้ง');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'ส่งแบบฟอร์มจอง';
       }
     }catch(err){
-      alert('เกิดข้อผิดพลาดในการส่งฟอร์ม: ' + err.message + '\\nกรุณาลองใหม่อีกครั้ง');
+      alert('เกิดข้อผิดพลาดในการส่งฟอร์ม: ' + err.message + '\nกรุณาลองใหม่อีกครั้ง');
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = 'ส่งแบบฟอร์มจอง';
     }
   });
 
+  // เริ่มต้นที่หน้าจอเลือกโหมด (จองใหม่ / อัปสลิป)
   showStep(currentStep);
+  showScreen('modeSelect');
 </script>
 </body>
 </html>
