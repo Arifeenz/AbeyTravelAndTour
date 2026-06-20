@@ -445,7 +445,7 @@
 
   <!-- MODE SELECT -->
   <div class="card mode-select" id="modeSelect">
-    <h2>ต้องการทำรายการไหนครับ/คะ</h2>
+    <h2>ต้องการทำรายการไหนคะ</h2>
     <div class="mode-cards">
       <div class="mode-card" id="btnModeBook">
         <div class="mc-icon">📝</div>
@@ -817,7 +817,17 @@
     });
     if(screens[name]) screens[name].style.display = (name === 'installmentSuccess') ? 'block' : '';
     if(name === 'installmentSuccess') screens[name].classList.add('active');
-    window.scrollTo({top:0, behavior:'smooth'});
+
+    // เลื่อนไปที่การ์ดเป้าหมายพอดี ไม่กระโดดขึ้นบนสุดของหน้า (ยกเว้นกลับหน้าแรกจริง ๆ)
+    if(name === 'modeSelect'){
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else {
+      const target = screens[name];
+      if(target){
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({top: Math.max(targetTop - 16, 0), behavior:'smooth'});
+      }
+    }
   }
 
   document.getElementById('btnModeBook').addEventListener('click', () => {
