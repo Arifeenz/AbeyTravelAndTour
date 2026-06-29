@@ -445,7 +445,7 @@
 
   <!-- MODE SELECT -->
   <div class="card mode-select" id="modeSelect">
-    <h2>ต้องการทำรายการไหนคะ</h2>
+    <h2>ต้องการทำรายการไหนครับ/คะ</h2>
     <div class="mode-cards">
       <div class="mode-card" id="btnModeBook">
         <div class="mc-icon">📝</div>
@@ -482,29 +482,59 @@
 
     <div class="found-box" id="foundBox"></div>
 
-    <h2 style="font-family:'Noto Serif Thai',serif;color:var(--navy);font-size:16px;margin:0 0 14px;">เลือกงวดที่ต้องการอัปโหลดสลิป</h2>
-    <div class="inst-pick" id="instPick">
-      <div class="inst-pick-card" data-n="1"><div class="ip-num">งวดที่ 1</div><div class="ip-status" id="ipStatus1">ยังไม่อัป</div></div>
-      <div class="inst-pick-card" data-n="2"><div class="ip-num">งวดที่ 2</div><div class="ip-status" id="ipStatus2">ยังไม่อัป</div></div>
-      <div class="inst-pick-card" data-n="3"><div class="ip-num">งวดที่ 3</div><div class="ip-status" id="ipStatus3">ยังไม่อัป</div></div>
+    <!-- Tab เลือกประเภทงาน -->
+    <div style="display:flex;gap:10px;margin-bottom:20px;">
+      <button type="button" class="btn btn-primary" id="tabSlip" style="flex:1;padding:10px;">🧾 อัปสลิปชำระเงิน</button>
+      <button type="button" class="btn btn-ghost" id="tabPassport" style="flex:1;padding:10px;" id="tabPassportBtn">🛂 อัปพาสปอร์ต</button>
     </div>
 
-    <div class="row2">
-      <div class="field"><label>วันที่โอน</label><input type="date" id="instDate"></div>
-      <div class="field"><label>จำนวนเงิน</label><input type="text" id="instAmount" placeholder="5,000"></div>
-    </div>
-
-    <div class="field">
-      <label>อัปโหลดสลิป<span class="req">*</span></label>
-      <div class="file-drop" onclick="document.getElementById('instSlip').click()">
-        <input type="file" id="instSlip" accept="image/*,.pdf">
-        <div class="fd-icon">🧾</div>
-        <div class="fd-text">แตะเพื่อแนบสลิป</div>
-        <div class="fd-name" id="instSlipName"></div>
+    <!-- SECTION: อัปสลิป -->
+    <div id="sectionSlip">
+      <h2 style="font-family:'Noto Serif Thai',serif;color:var(--navy);font-size:16px;margin:0 0 14px;">เลือกงวดที่ต้องการอัปโหลดสลิป</h2>
+      <div class="inst-pick" id="instPick">
+        <div class="inst-pick-card" data-n="1"><div class="ip-num">งวดที่ 1</div><div class="ip-status" id="ipStatus1">ยังไม่อัป</div></div>
+        <div class="inst-pick-card" data-n="2"><div class="ip-num">งวดที่ 2</div><div class="ip-status" id="ipStatus2">ยังไม่อัป</div></div>
+        <div class="inst-pick-card" data-n="3"><div class="ip-num">งวดที่ 3</div><div class="ip-status" id="ipStatus3">ยังไม่อัป</div></div>
       </div>
+      <div class="row2">
+        <div class="field"><label>วันที่โอน</label><input type="date" id="instDate"></div>
+        <div class="field"><label>จำนวนเงิน</label><input type="text" id="instAmount" placeholder="5,000"></div>
+      </div>
+      <div class="field">
+        <label>อัปโหลดสลิป<span class="req">*</span></label>
+        <div class="file-drop" onclick="document.getElementById('instSlip').click()">
+          <input type="file" id="instSlip" accept="image/*,.pdf">
+          <div class="fd-icon">🧾</div><div class="fd-text">แตะเพื่อแนบสลิป</div>
+          <div class="fd-name" id="instSlipName"></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-gold" id="btnSubmitInstallment" style="width:100%;margin-top:8px">บันทึกสลิป</button>
     </div>
 
-    <button type="button" class="btn btn-gold" id="btnSubmitInstallment" style="width:100%;margin-top:8px">บันทึกสลิป</button>
+    <!-- SECTION: อัปพาสปอร์ต -->
+    <div id="sectionPassport" style="display:none">
+      <div class="hint" id="passportStatusHint" style="background:#e8f4e8;border:1px solid #5cb85c;border-radius:9px;padding:12px 14px;margin-bottom:16px;color:#2d6a2d;font-size:13px;display:none">
+        ✅ มีไฟล์พาสปอร์ตอยู่แล้วในระบบ ถ้าต้องการอัปเดตใหม่อัปโหลดไฟล์ใหม่ได้เลย
+      </div>
+      <div class="field">
+        <label>เลขพาสปอร์ต</label>
+        <input type="text" id="newPassportNo" placeholder="กรอกเลขพาสปอร์ต">
+      </div>
+      <div class="field">
+        <label>วันหมดอายุพาสปอร์ต</label>
+        <input type="date" id="newPassportExpiry">
+        <div class="hint">📌 พาสปอร์ตต้องเหลืออายุไม่ต่ำกว่า 6 เดือนนับจากวันเดินทาง</div>
+      </div>
+      <div class="field">
+        <label>อัปโหลดหน้าพาสปอร์ต<span class="req">*</span></label>
+        <div class="file-drop" onclick="document.getElementById('newPassportFile').click()">
+          <input type="file" id="newPassportFile" accept="image/*,.pdf">
+          <div class="fd-icon">🛂</div><div class="fd-text">แตะเพื่อเลือกไฟล์ภาพ หรือ PDF</div>
+          <div class="fd-name" id="newPassportFileName"></div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" id="btnSubmitPassport" style="width:100%;margin-top:8px">บันทึกพาสปอร์ต</button>
+    </div>
   </div>
 
   <!-- INSTALLMENT SUCCESS -->
@@ -585,17 +615,59 @@
           <div class="error-text">กรุณาเลือกวันเดือนปีเกิด</div>
         </div>
 
-        <div class="field" data-name="passportNo">
-          <label>เลขพาสปอร์ต<span class="req">*</span></label>
-          <input type="text" name="passportNo" required>
-          <div class="error-text">กรุณากรอกเลขพาสปอร์ต</div>
+        <!-- คำถาม passport branch -->
+        <div class="field" data-name="hasPassport">
+          <label>มีพาสปอร์ตแล้วหรือยัง<span class="req">*</span></label>
+          <div class="choice-group">
+            <div class="choice"><input type="radio" name="hasPassport" id="hp1" value="มีแล้ว" required><label for="hp1">✅ มีพาสปอร์ตแล้ว</label></div>
+            <div class="choice"><input type="radio" name="hasPassport" id="hp2" value="ยังไม่มี"><label for="hp2">⏳ ยังไม่มี / อยู่ระหว่างทำ</label></div>
+          </div>
+          <div class="error-text">กรุณาเลือกสถานะพาสปอร์ต</div>
         </div>
 
-        <div class="field" data-name="passportExpiry">
-          <label>วันหมดอายุพาสปอร์ต<span class="req">*</span></label>
-          <input type="date" name="passportExpiry" required>
-          <div class="hint">📌 พาสปอร์ตต้องเหลืออายุไม่ต่ำกว่า 6 เดือนนับจากวันเดินทาง</div>
-          <div class="error-text">กรุณาเลือกวันหมดอายุพาสปอร์ต</div>
+        <!-- กรณีมีพาสปอร์ตแล้ว -->
+        <div id="passportSection">
+          <div class="field" data-name="passportNo">
+            <label>เลขพาสปอร์ต<span class="req">*</span></label>
+            <input type="text" name="passportNo" id="passportNo">
+            <div class="error-text">กรุณากรอกเลขพาสปอร์ต</div>
+          </div>
+
+          <div class="field" data-name="passportExpiry">
+            <label>วันหมดอายุพาสปอร์ต<span class="req">*</span></label>
+            <input type="date" name="passportExpiry" id="passportExpiry">
+            <div class="hint">📌 พาสปอร์ตต้องเหลืออายุไม่ต่ำกว่า 6 เดือนนับจากวันเดินทาง</div>
+            <div class="error-text">กรุณาเลือกวันหมดอายุพาสปอร์ต</div>
+          </div>
+
+          <div class="field" data-name="passportFile">
+            <label>อัปโหลดหน้าพาสปอร์ต (ภาพชัดเจน)<span class="req">*</span></label>
+            <div class="file-drop" onclick="document.getElementById('passportFile').click()">
+              <input type="file" id="passportFile" name="passportFile" accept="image/*,.pdf">
+              <div class="fd-icon">🛂</div>
+              <div class="fd-text">แตะเพื่อเลือกไฟล์ภาพ หรือ PDF</div>
+              <div class="fd-name" id="passportFileName"></div>
+            </div>
+            <div class="error-text">กรุณาอัปโหลดหน้าพาสปอร์ต</div>
+          </div>
+        </div>
+
+        <!-- กรณียังไม่มีพาสปอร์ต -->
+        <div id="nidSection" style="display:none">
+          <div class="hint" style="background:#fff8e6;border:1px solid #f0c040;border-radius:9px;padding:12px 14px;margin-bottom:16px;color:#7a5c00;font-size:13px;">
+            ⚠️ กรุณานำส่งสำเนาพาสปอร์ตให้แอดมินภายใน 30 วัน เพื่อออกตั๋วได้ทันเวลา<br>
+            สามารถอัปโหลดพาสปอร์ตทีหลังได้ผ่านหน้า "อัปโหลดสลิปงวดถัดไป"
+          </div>
+          <div class="field" data-name="nidFile">
+            <label>อัปโหลดบัตรประชาชน (แทนพาสปอร์ตชั่วคราว)<span class="req">*</span></label>
+            <div class="file-drop" onclick="document.getElementById('nidFile').click()">
+              <input type="file" id="nidFile" name="nidFile" accept="image/*,.pdf">
+              <div class="fd-icon">🪪</div>
+              <div class="fd-text">แตะเพื่อเลือกไฟล์ภาพ หรือ PDF</div>
+              <div class="fd-name" id="nidFileName"></div>
+            </div>
+            <div class="error-text">กรุณาอัปโหลดบัตรประชาชน</div>
+          </div>
         </div>
 
         <div class="field" data-name="nationality">
@@ -611,17 +683,6 @@
             <div class="choice"><input type="radio" name="gender" id="g2" value="หญิง"><label for="g2">หญิง</label></div>
           </div>
           <div class="error-text">กรุณาเลือกเพศ</div>
-        </div>
-
-        <div class="field" data-name="passportFile">
-          <label>อัปโหลดหน้าพาสปอร์ต (ภาพชัดเจน)<span class="req">*</span></label>
-          <div class="file-drop" onclick="document.getElementById('passportFile').click()">
-            <input type="file" id="passportFile" name="passportFile" accept="image/*,.pdf" required>
-            <div class="fd-icon">🛂</div>
-            <div class="fd-text">แตะเพื่อเลือกไฟล์ภาพ หรือ PDF</div>
-            <div class="fd-name" id="passportFileName"></div>
-          </div>
-          <div class="error-text">กรุณาอัปโหลดหน้าพาสปอร์ต</div>
         </div>
       </div>
 
@@ -1087,9 +1148,100 @@
     });
   }
   bindFileName('passportFile','passportFileName');
+  bindFileName('nidFile','nidFileName');
+  bindFileName('instSlip','instSlipName');
+  bindFileName('newPassportFile','newPassportFileName');
   bindFileName('slip1','slip1Name');
   bindFileName('slip2','slip2Name');
   bindFileName('slip3','slip3Name');
+
+  // ==================== TAB SWITCHING (สลิป / พาสปอร์ต) ====================
+  document.getElementById('tabSlip').addEventListener('click', () => {
+    document.getElementById('sectionSlip').style.display = '';
+    document.getElementById('sectionPassport').style.display = 'none';
+    document.getElementById('tabSlip').className = 'btn btn-primary';
+    document.getElementById('tabPassport').className = 'btn btn-ghost';
+  });
+  document.getElementById('tabPassport').addEventListener('click', () => {
+    document.getElementById('sectionSlip').style.display = 'none';
+    document.getElementById('sectionPassport').style.display = '';
+    document.getElementById('tabSlip').className = 'btn btn-ghost';
+    document.getElementById('tabPassport').className = 'btn btn-primary';
+    const hint = document.getElementById('passportStatusHint');
+    if(foundBooking && foundBooking.passportFile) {
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+    }
+  });
+
+  // ==================== SUBMIT PASSPORT ====================
+  document.getElementById('btnSubmitPassport').addEventListener('click', async () => {
+    const fileInput = document.getElementById('newPassportFile');
+    if(fileInput.files.length === 0){
+      alert('กรุณาแนบไฟล์พาสปอร์ต');
+      return;
+    }
+    const btn = document.getElementById('btnSubmitPassport');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>กำลังบันทึก...';
+    const passportFile = await fileToBase64(fileInput.files[0]);
+    const payload = {
+      rowNumber: foundBooking.rowNumber,
+      phone: foundBooking.phone,
+      type: 'passport',
+      passportNo: document.getElementById('newPassportNo').value,
+      passportExpiry: document.getElementById('newPassportExpiry').value,
+      passportFile: passportFile
+    };
+    try{
+      const res = await callScript('updateInstallment', payload);
+      if(res && res.result === 'success'){
+        showScreen('installmentSuccess');
+      } else {
+        alert('เกิดข้อผิดพลาด: ' + (res && res.message ? res.message : 'unknown error'));
+        btn.disabled = false;
+        btn.innerHTML = 'บันทึกพาสปอร์ต';
+      }
+    }catch(err){
+      alert('เกิดข้อผิดพลาด: ' + err.message);
+      btn.disabled = false;
+      btn.innerHTML = 'บันทึกพาสปอร์ต';
+    }
+  });
+
+  // ==================== PASSPORT BRANCH LOGIC ====================
+  document.querySelectorAll('input[name="hasPassport"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const hasPassport = document.querySelector('input[name="hasPassport"]:checked')?.value === 'มีแล้ว';
+      const passSection = document.getElementById('passportSection');
+      const nidSection = document.getElementById('nidSection');
+
+      passSection.style.display = hasPassport ? '' : 'none';
+      nidSection.style.display = hasPassport ? 'none' : '';
+
+      // ปรับ required ตาม branch
+      document.getElementById('passportNo').required = hasPassport;
+      document.getElementById('passportExpiry').required = hasPassport;
+      document.getElementById('passportFile').required = hasPassport;
+      document.getElementById('nidFile').required = !hasPassport;
+
+      // เคลียร์ค่าและ error ของ section ที่ซ่อน
+      if(!hasPassport){
+        document.getElementById('passportNo').value = '';
+        document.getElementById('passportExpiry').value = '';
+        document.getElementById('passportFileName').textContent = '';
+        ['passportNo','passportExpiry','passportFile'].forEach(name => {
+          const f = document.querySelector(`[data-name="${name}"]`);
+          if(f) f.classList.remove('invalid');
+        });
+      } else {
+        document.getElementById('nidFileName').textContent = '';
+        const f = document.querySelector('[data-name="nidFile"]');
+        if(f) f.classList.remove('invalid');
+      }
+    });
+  });
 
   function fileToBase64(file){
     return new Promise((resolve, reject) => {
@@ -1120,6 +1272,7 @@
     const get = (name) => (fd.get(name) || '').toString();
 
     const passportFile = await fileToBase64(document.getElementById('passportFile').files[0]);
+    const nidFile = await fileToBase64(document.getElementById('nidFile').files[0]);
     const slip1File = await fileToBase64(document.getElementById('slip1').files[0]);
     const slip2File = await fileToBase64(document.getElementById('slip2').files[0]);
     const slip3File = await fileToBase64(document.getElementById('slip3').files[0]);
@@ -1132,6 +1285,7 @@
       travelerCount: get('travelerCount'),
       companions: get('companions'),
       birthDate: get('birthDate'),
+      hasPassport: get('hasPassport'),
       passportNo: get('passportNo'),
       passportExpiry: get('passportExpiry'),
       nationality: get('nationality'),
@@ -1152,7 +1306,7 @@
       installment3Amount: get('installment3Amount'),
       acceptTerms: document.getElementById('acceptTerms').checked ? 'ยอมรับ' : 'ไม่ยอมรับ',
       consentPhoto: document.getElementById('consentPhoto').checked ? 'ยินยอม' : 'ไม่ยินยอม',
-      passportFile, slip1File, slip2File, slip3File
+      passportFile, nidFile, slip1File, slip2File, slip3File
     };
 
     try{
